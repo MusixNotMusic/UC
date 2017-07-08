@@ -1,0 +1,41 @@
+#include <apue.h>
+#include <sys/times.h>
+#include "my_exit.c"
+
+extern void pr_exit(int);
+extern void pr_times(clock_t, struct tms*, struct tms*);
+static void do_cmd(char *);
+
+int
+main(int argc, char *argv[])
+{
+	int		i;
+	setbuf(stdout, NULL);
+	printf("argc = %d\n", argc);
+	for(i = 1; i < argc; i++){
+		do_cmd(argv[i]);
+	}
+	exit(0);
+}
+
+static void
+do_cmd(char *cmd)
+{
+	struct tms 	tmsstart, tmsend;
+	clock_t		start,end;
+	int			status;
+
+	printf("\ncommand: %s\n", cmd);
+
+	if((start = times(&tmsstart)) == -1)
+		err_sys("times error");
+
+	if((status = system(cmd)) < 0)
+		err_sys("system() error");
+
+	if((end = times(&tmsend)) == -1)
+		err_sys("times error");
+
+	pr_times(end - start, &tmsstart, &tmsend);
+	pr_exit(status);
+}
