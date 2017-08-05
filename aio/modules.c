@@ -7,8 +7,7 @@ int
 main(int argc, char *argv[])
 {
 	int		fd, i, nmods;
-	struct  str_list	list;
-
+	struct  str_list	listdb
 	if(argc != 2)
 		err_quit("usage: %s <pathname>", argv[0]);
 	if((fd = open(argv[1], O_RDONLY)) < 0)
